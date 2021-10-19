@@ -11,7 +11,7 @@
 # - Sets up systemd-networkd/resolved for network management
 # - Timezone and locale as per India
 #
-# Usage (in user account):
+# Usage (in user account, using non-lts kernel):
 # - bash setup_arch_1.sh
 # - Pass -v option for vbox installation
 # ====================================================================
@@ -93,6 +93,22 @@ printf '::1\tlocalhost\n' | sudo tee -a /etc/hosts > /dev/null
 printf '=> /ETC/HOSTS CONTENTS: \n'
 cat /etc/hosts
 sleep 15s
+printf '====== DONE ====== \n'
+printf '\n'
+sleep 5s
+
+# create dirs
+printf '====== CREATING EMPTY REQUIRED DIRS ====== \n'
+sudo mkdir -p /mnt/Windows
+sudo mkdir -p /mnt/Data
+printf '====== DONE ====== \n'
+printf '\n'
+sleep 5s
+
+# set up git
+printf '====== SETTING UP GIT ====== \n'
+git config --global user.email 'smeetrs@gmail.com'
+git config --global user.name 'lordmartian'
 printf '====== DONE ====== \n'
 printf '\n'
 sleep 5s

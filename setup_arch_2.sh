@@ -11,7 +11,7 @@
 # Notes:
 # -  Apps and settings specific to me
 #
-# Usage (in user account):
+# Usage (in user account, using non-lts kernel):
 # - bash setup_arch_2.sh
 # - Pass -v option for vbox installation
 # ====================================================================
@@ -71,6 +71,7 @@ sleep 5s
 
 # yay
 printf '====== INSTALLING YAY ====== \n'
+mkdir -p ~/Downloads/Wallpapers
 mkdir -p ~/Downloads/Github
 mkdir -p ~/Downloads/AUR
 cd Downloads/AUR
@@ -192,15 +193,6 @@ printf '====== DONE ====== \n'
 printf '\n'
 sleep 5s
 
-# create dirs
-printf '====== CREATING EMPTY REQUIRED DIRS ====== \n'
-mkdir -p /mnt/Windows
-mkdir -p /mnt/Data
-mkdir -p ~/Downloads/Wallpapers
-printf '====== DONE ====== \n'
-printf '\n'
-sleep 5s
-
-printf '====== SETUP COMPLETE. REBOOTING. ====== \n'
+printf '====== SETUP COMPLETE. DELETE AND RE-CLONE ARCH-SCRIPTS DIR. REBOOTING. ====== \n'
 sleep 5s
 sudo reboot

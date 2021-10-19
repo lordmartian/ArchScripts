@@ -22,12 +22,12 @@ while getopts ":v" opt
 do
     case $opt in
         v) VBOX_INSTALL=true;;
-        \?) printf 'Invalid Option: -$OPTARG \n';;
+        \?) printf "Invalid Option: -$OPTARG \n";;
     esac
 done
 printf '\n'
 
-if [[ $VBOX_INSTALL ]]
+if $VBOX_INSTALL
 then
     printf '=> VBOX INSTALLATION \n'
 else
@@ -121,7 +121,7 @@ sleep 5s
 # display server, drivers and display manager
 printf '====== INSTALLING XORG, DRIVERS AND LIGHTDM ====== \n'
 sudo pacman --noconfirm -S xorg
-if [[ $VBOX_INSTALL ]]
+if $VBOX_INSTALL
 then
     sudo pacman --noconfirm -S xf86-video-vmware
 else

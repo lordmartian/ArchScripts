@@ -23,12 +23,12 @@ while getopts ":v" opt
 do
     case $opt in
         v) VBOX_INSTALL=true;;
-        \?) printf 'Invalid Option: -$OPTARG \n';;
+        \?) printf "Invalid Option: -$OPTARG \n";;
     esac
 done
 printf '\n'
 
-if [[ $VBOX_INSTALL ]]
+if $VBOX_INSTALL
 then
     printf '=> VBOX INSTALLATION \n'
 else
@@ -81,7 +81,7 @@ sleep 5s
 printf '====== INSTALLING BASE SYSTEM, LINUX AND ESSENTIAL PKGS ====== \n'
 pacstrap /mnt base linux linux-lts linux-headers linux-lts-headers linux-firmware
 pacstrap /mnt amd-ucode sudo vim iwd ntfs-3g git base-devel
-if [[ $VBOX_INSTALL ]]
+if $VBOX_INSTALL
 then
     pacstrap /mnt virtualbox-guest-utils
 fi

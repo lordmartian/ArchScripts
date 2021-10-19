@@ -23,12 +23,12 @@ while getopts ":v" opt
 do
     case $opt in
         v) VBOX_INSTALL=true;;
-        \?) printf 'Invalid Option: -$OPTARG \n';;
+        \?) printf "Invalid Option: -$OPTARG \n";;
     esac
 done
 printf '\n'
 
-if [[ $VBOX_INSTALL ]]
+if $VBOX_INSTALL
 then
     printf '=> VBOX INSTALLATION \n'
 else
@@ -40,7 +40,7 @@ printf '\n'
 cd ~
 
 # enable vbox service
-if [[ $VBOX_INSTALL ]]
+if $VBOX_INSTALL
 then
     printf '====== ENABLING VBOX SERVICE ====== \n'
     sudo systemctl enable vboxservice

@@ -109,6 +109,7 @@ sleep 5s
 printf '====== SETTING UP GIT ====== \n'
 git config --global user.email 'smeetrs@gmail.com'
 git config --global user.name 'lordmartian'
+git config --global credential.helper store
 printf '====== DONE ====== \n'
 printf '\n'
 sleep 5s

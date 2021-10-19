@@ -62,7 +62,7 @@ sleep 5s
 
 # updating packages
 printf '====== UPDATING PACKAGES ====== \n'
-sudo pacman -Syu
+sudo pacman --noconfirm -Syu
 printf '====== DONE ====== \n'
 printf '\n'
 sleep 5s
@@ -91,7 +91,7 @@ sleep 5s
 
 # firewall
 printf '====== INSTALLING FIREWALL ====== \n'
-sudo pacman -S ufw
+sudo pacman --noconfirm -S ufw
 sudo ufw enable
 sudo systemctl enable ufw
 printf '====== DONE ====== \n'
@@ -100,7 +100,7 @@ sleep 5s
 
 # tlp
 printf '====== INSTALLING TLP ====== \n'
-sudo pacman -S tlp
+sudo pacman --noconfirm -S tlp
 sudo systemctl enable tlp
 printf '====== DONE ====== \n'
 printf '\n'
@@ -108,7 +108,7 @@ sleep 5s
 
 # zsh
 printf '====== INSTALLING ZSH AND OH-MY-ZSH ====== \n'
-sudo pacman -S zsh
+sudo pacman --noconfirm -S zsh
 sudo chsh -s /bin/zsh $USER
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 rm -f ~/.bash*
@@ -120,14 +120,14 @@ sleep 5s
 
 # display server, drivers and display manager
 printf '====== INSTALLING XORG, DRIVERS AND LIGHTDM ====== \n'
-sudo pacman -S xorg
+sudo pacman --noconfirm -S xorg
 if [[ $VBOX_INSTALL ]]
 then
-    sudo pacman -S xf86-video-vmware
+    sudo pacman --noconfirm -S xf86-video-vmware
 else
-    sudo pacman -S xf86-video-amdgpu mesa
+    sudo pacman --noconfirm -S xf86-video-amdgpu mesa
 fi
-sudo pacman -S lightdm lightdm-gtk-greeter
+sudo pacman --noconfirm -S lightdm lightdm-gtk-greeter
 sudo systemctl enable lightdm
 printf '====== DONE ====== \n'
 printf '\n'
@@ -136,8 +136,8 @@ sleep 5s
 # i3 window manager
 printf '====== INSTALLING I3 WM ====== \n'
 yay -S i3-gaps-rounded-git
-sudo pacman -S i3status rofi alacritty ttf-dejavu
-sudo pacman -S brightnessctl nitrogen
+sudo pacman --noconfirm -S i3status rofi alacritty ttf-dejavu
+sudo pacman --noconfirm -S brightnessctl nitrogen
 printf 'Xft.dpi: 150\n' | tee ~/.Xresources > /dev/null
 printf '====== DONE ====== \n'
 printf '\n'
@@ -145,7 +145,7 @@ sleep 5s
 
 # tap to click and natural scrolling
 printf '====== ENABLING TAP-TO-CLICK AND NATURAL SCROLLING ====== \n'
-sudo pacman -S xf86-input-libinput
+sudo pacman --noconfirm -S xf86-input-libinput
 printf '\tOption "Tapping" "on"\n' | sudo tee -a /usr/share/X11/xorg.conf.d/40-libinput.conf > /dev/null
 printf '\tOption "NaturalScrolling" "true"\n' | sudo tee -a /usr/share/X11/xorg.conf.d/40-libinput.conf > /dev/null
 printf '=> OPENING 40-LIBINPUT.CONF FILE. MOVE BOTTOM TWO LINES TO TOUCHPAD SECTION. \n'
@@ -157,7 +157,7 @@ sleep 5s
 
 # necessary apps
 printf '====== INSTALLING NECESSARY APPS ====== \n'
-sudo pacman -S neofetch firefox
+sudo pacman --noconfirm -S neofetch firefox
 yay -S pamac-aur nerd-fonts-hack
 printf '====== DONE ====== \n'
 printf '\n'
@@ -166,7 +166,7 @@ sleep 5s
 # github repos
 printf '====== CLONING REQUIRED GITHUB REPOS ====== \n'
 cd Downloads/Github
-git clone https://github.com/dracula/alacritty.git
+git clone https://github.com/dracula/alacritty.git alacritty-dracula
 cd ~
 printf '====== DONE ====== \n'
 printf '\n'
@@ -174,7 +174,7 @@ sleep 5s
 
 # dotfiles
 printf '====== ADDING MY DOTFILES ====== \n'
-sudo pacman -S stow
+sudo pacman --noconfirm -S stow
 git clone https://github.com/lordmartian/dotfiles.git
 cd dotfiles
 for DIR in *
@@ -188,6 +188,15 @@ do
     fi
 done
 cd ~
+printf '====== DONE ====== \n'
+printf '\n'
+sleep 5s
+
+# create dirs
+printf '====== CREATING EMPTY REQUIRED DIRS ====== \n'
+mkdir -p /mnt/Windows
+mkdir -p /mnt/Data
+mkdir -p ~/Downloads/Wallpapers
 printf '====== DONE ====== \n'
 printf '\n'
 sleep 5s

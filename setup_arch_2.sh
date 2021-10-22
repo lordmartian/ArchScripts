@@ -166,9 +166,9 @@ sleep 5s
 
 # github repos
 printf '====== CLONING REQUIRED GITHUB REPOS ====== \n'
-cd Downloads/Github
-git clone https://github.com/dracula/alacritty.git alacritty-dracula
-cd ~
+git clone https://github.com/dracula/alacritty.git Downloads/Github/alacritty-dracula
+git clone https://github.com/dracula/zsh.git .oh-my-zsh/custom/themes/dracula
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git .oh-my-zsh/custom/plugins/zsh-syntax-highlighting
 printf '====== DONE ====== \n'
 printf '\n'
 sleep 5s

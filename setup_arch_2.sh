@@ -165,10 +165,11 @@ printf "\n"
 sleep 5s
 
 # github repos
-printf "====== CLONING REQUIRED GITHUB REPOS ====== \n"
+printf "====== CLONING/DOWNLOADING STUFF FROM GITHUB ====== \n"
 git clone https://github.com/dracula/alacritty.git Downloads/Github/alacritty-dracula
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git .oh-my-zsh/custom/plugins/zsh-syntax-highlighting
 git clone https://github.com/tmux-plugins/tpm .tmux/plugins/tpm
+curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 printf "====== DONE ====== \n"
 printf "\n"
 sleep 5s

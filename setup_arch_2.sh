@@ -158,7 +158,7 @@ sleep 5s
 
 # necessary apps
 printf "====== INSTALLING NECESSARY APPS ====== \n"
-sudo pacman --noconfirm -S neofetch firefox tmux starship thunar
+sudo pacman --noconfirm -S neofetch firefox tmux starship thunar ctags
 yay -S pamac-aur nerd-fonts-hack
 printf "====== DONE ====== \n"
 printf "\n"

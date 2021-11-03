@@ -69,11 +69,28 @@ sleep 5s
 
 # ========================= for pure Arch ============================
 
-# yay
-printf "====== INSTALLING YAY ====== \n"
+# create dirs
+printf "====== CREATING EMPTY REQUIRED DIRS ====== \n"
 mkdir -p ~/Downloads/Wallpapers
 mkdir -p ~/Downloads/Github
 mkdir -p ~/Downloads/AUR
+sudo mkdir -p /mnt/Windows
+sudo mkdir -p /mnt/Data
+printf "====== DONE ====== \n"
+printf "\n"
+sleep 5s
+
+# set up git
+printf "====== SETTING UP GIT ====== \n"
+git config --global user.email "smeetrs@gmail.com"
+git config --global user.name "lordmartian"
+git config --global credential.helper store
+printf "====== DONE ====== \n"
+printf "\n"
+sleep 5s
+
+# yay
+printf "====== INSTALLING YAY ====== \n"
 cd Downloads/AUR
 git clone https://aur.archlinux.org/yay.git
 cd yay

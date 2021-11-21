@@ -122,10 +122,10 @@ printf "\n"
 sleep 5s
 
 # chroot commands:
-# 1.timedate/locale/hostname, 2.root/user password, 3.grub, 4.AUR packages, 5.enable services
+# 1.timedate/locale/hostname, 2.root/user password, 3.grub, 4.enable services
 arch-chroot /mnt /bin/bash << EOC
 printf "$BYELLOW ====== CHROOT: SETTING UP TIME-DATE, LOCALE AND HOSTNAME ====== $NOCOLOR\n"
-ln -s /usr/share/zoneinfo/Asia/Kolkata /etc/localtime
+ln -sf /usr/share/zoneinfo/Asia/Kolkata /etc/localtime
 hwclock --systohc
 sed -i "s/#en_IN UTF-8/en_IN UTF-8/;s/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/" /etc/locale.gen
 locale-gen
@@ -162,36 +162,18 @@ printf "$BGREEN ====== DONE ====== $NOCOLOR\n"
 printf "\n"
 sleep 5s
 
-su $USER_NAME -c "
-cd /home/$USER_NAME
-printf "$BYELLOW ====== CHROOT: INSTALLING YAY ====== $NOCOLOR\n"
-git clone https://aur.archlinux.org/yay.git
-cd yay
-makepkg -sicr
-cd ..
-rm -r yay
-printf "$BGREEN ====== DONE ====== $NOCOLOR\n"
-printf "\n"
-sleep 5s
-
-printf "$BYELLOW ====== CHROOT: INSTALLING ESSENTIAL AUR PACKAGES ====== $NOCOLOR\n"
-yay -S rtl8821ce-dkms-git pamac-aur nerd-fonts-hack nerd-fonts-fira-code nerd-fonts-jetbrains-mono nerd-fonts-source-code-pro
-printf "$BGREEN ====== DONE ====== $NOCOLOR\n"
-printf "\n"
-sleep 5s
-"
-
 printf "$BYELLOW ====== CHROOT: ENABLING REQUIRED SERVICES ====== $NOCOLOR\n"
-ufw enable
-ln -s /usr/lib/systemd/system/sddm.service /etc/systemd/system/display-manager.service
-ln -s /usr/lib/systemd/system/NetworkManager.service /etc/systemd/system/multi-user.target.wants/NetworkManager.service
-ln -s /usr/lib/systemd/system/NetworkManager-dispatcher.service /etc/systemd/system/dbus-org.freedesktop.nm-dispatcher.service
-ln -s /usr/lib/systemd/system/NetworkManager-wait-online.service /etc/systemd/system/network-online.target.wants/NetworkManager-wait-online.service
-ln -s /usr/lib/systemd/system/ufw.service /etc/systemd/system/multi-user.target.wants/ufw.service
-ln -s /usr/lib/systemd/system/tlp.service /etc/systemd/system/multi-user.target.wants/tlp.service
+mkdir -p /etc/systemd/system/multi-user.target.wants
+mkdir -p /etc/systemd/system/network-online.target.wants
+ln -sf /usr/lib/systemd/system/sddm.service /etc/systemd/system/display-manager.service
+ln -sf /usr/lib/systemd/system/NetworkManager.service /etc/systemd/system/multi-user.target.wants/NetworkManager.service
+ln -sf /usr/lib/systemd/system/NetworkManager-dispatcher.service /etc/systemd/system/dbus-org.freedesktop.nm-dispatcher.service
+ln -sf /usr/lib/systemd/system/NetworkManager-wait-online.service /etc/systemd/system/network-online.target.wants/NetworkManager-wait-online.service
+ln -sf /usr/lib/systemd/system/ufw.service /etc/systemd/system/multi-user.target.wants/ufw.service
+ln -sf /usr/lib/systemd/system/tlp.service /etc/systemd/system/multi-user.target.wants/tlp.service
 if [[ "$VBOX_INSTALL" == "true" ]]
 then
-    ln -s /usr/lib/systemd/system/vboxservice.service /etc/systemd/system/multi-user.target.wants/vboxservice.service
+    ln -sf /usr/lib/systemd/system/vboxservice.service /etc/systemd/system/multi-user.target.wants/vboxservice.service
 fi
 printf "$BGREEN ====== DONE ====== $NOCOLOR\n"
 printf "\n"

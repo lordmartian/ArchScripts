@@ -9,9 +9,23 @@
 # Notes:
 # -  Settings specific to me
 #
-# Usage (as user):
+# Usage (as user, from non-lts kernel):
 # - bash customize.sh
 # ====================================================================
+
+NOCOLOR="\033[0m"
+RED="\033[0;31m"
+GREEN="\033[0;32m"
+YELLOW="\033[0;33m"
+BLUE="\033[0;34m"
+PURPLE="\033[0;35m"
+CYAN="\033[0;36m"
+BRED="\033[1;31m"
+BGREEN="\033[1;32m"
+BYELLOW="\033[1;33m"
+BBLUE="\033[1;34m"
+BPURPLE="\033[1;35m"
+BCYAN="\033[1;36m"
 
 # change to home directory
 cd ~
@@ -30,6 +44,8 @@ printf "====== DONE ====== \n"
 printf "\n"
 sleep 5s
 
+ufw enable
+
 # updating packages
 printf "====== UPDATING PACKAGES ====== \n"
 sudo pacman --noconfirm -Syu
@@ -38,6 +54,23 @@ printf "\n"
 sleep 5s
 
 # ========================= for pure Arch ============================
+
+cd /home/$USER_NAME
+printf "$BYELLOW ====== CHROOT: INSTALLING YAY ====== $NOCOLOR\n"
+git clone https://aur.archlinux.org/yay.git
+cd yay
+makepkg -sicr
+cd ..
+rm -rf yay
+printf "$BGREEN ====== DONE ====== $NOCOLOR\n"
+printf "\n"
+sleep 5s
+
+printf "$BYELLOW ====== CHROOT: INSTALLING ESSENTIAL AUR PACKAGES ====== $NOCOLOR\n"
+yay -S rtl8821ce-dkms-git pamac-aur nerd-fonts-hack nerd-fonts-fira-code nerd-fonts-jetbrains-mono nerd-fonts-source-code-pro
+printf "$BGREEN ====== DONE ====== $NOCOLOR\n"
+printf "\n"
+sleep 5s
 
 # create dirs
 printf "====== CREATING EMPTY REQUIRED DIRS ====== \n"

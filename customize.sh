@@ -67,13 +67,6 @@ sleep 5s
 
 # ============================ GUI ===================================
 
-# necessary apps
-printf "====== INSTALLING NECESSARY APPS ====== \n"
-yay -S nerd-fonts-hack
-printf "====== DONE ====== \n"
-printf "\n"
-sleep 5s
-
 # github repos
 printf "====== CLONING/DOWNLOADING STUFF FROM GITHUB ====== \n"
 git clone https://github.com/dracula/alacritty.git Downloads/Github/alacritty-dracula

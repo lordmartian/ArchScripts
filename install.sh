@@ -14,11 +14,8 @@
 # Usage (as root):
 # - bash install.sh
 # - Pass -v option for vbox installation
-# - Use Ctrl+Z to stop script. Then use 'kill -9 PID'.
+# - Use Ctrl+Z to suspend script. Then use 'kill -9 PID'.
 # ==========================================================
-
-USER_NAME=smeetrs
-HOST_NAME=MyLinux
 
 NOCOLOR="\033[0m"
 RED="\033[0;31m"
@@ -34,9 +31,8 @@ BBLUE="\033[1;34m"
 BPURPLE="\033[1;35m"
 BCYAN="\033[1;36m"
 
-VBOX_INSTALL=false
-
 # parse arguments
+VBOX_INSTALL=false
 while getopts ":v" OPT
 do
     case $OPT in
@@ -92,7 +88,7 @@ sleep 5s
 
 # install all required packages
 printf "$BYELLOW ====== INSTALLING REQUIRED PACKAGES ====== $NOCOLOR\n"
-pacstrap /mnt base linux linux-lts linux-headers linux-lts-headers linux-firmware amd-ucode sudo grub efibootmgr vim git base-devel ntfs-3g xorg plasma konsole dolphin firefox neofetch ctags tmux starship noto-fonts-emoji ufw tlp zsh stow
+pacstrap /mnt base linux linux-lts linux-headers linux-lts-headers linux-firmware amd-ucode sudo grub efibootmgr vim git base-devel ntfs-3g xorg plasma konsole dolphin firefox ufw tlp zsh stow neofetch ctags tmux starship noto-fonts-emoji
 if [[ "$VBOX_INSTALL" == "true" ]]
 then
     pacstrap /mnt virtualbox-guest-utils xf86-video-vmware
@@ -113,33 +109,27 @@ printf "$BGREEN ====== DONE ====== $NOCOLOR\n"
 printf "\n"
 sleep 5s
 
+# get info
+printf "$BYELLOW ====== OBTAINING USER INFO ====== $NOCOLOR\n"
+printf "$BBLUE => ENTER DESIRED USERNAME $NOCOLOR\n"
+read USER_NAME
+printf "$BBLUE => ENTER DESIRED HOSTNAME $NOCOLOR\n"
+read HOST_NAME
+printf "$BBLUE => ENTER DESIRED PASSWORD $NOCOLOR\n"
+read PASS_WORD
+printf "$BGREEN ====== DONE ====== $NOCOLOR\n"
+printf "\n"
+sleep 5s
+
 # chroot commands:
-# 1.timedate/locale/hostname, 2.root/user password, 3.grub, 4.enable services
+# 1.timedate/locale/hostname, 2.root/user password, 3.grub, 4.AUR packages, 5.enable services
 arch-chroot /mnt /bin/bash << EOC
-printf "$BYELLOW ====== CHROOT: INSTALLING YAY ====== $NOCOLOR\n"
-git clone https://aur.archlinux.org/yay.git
-cd yay
-makepkg -sicr
-cd ..
-rm -rf yay
-printf "$BGREEN ====== DONE ====== $NOCOLOR\n"
-printf "\n"
-sleep 5s
-
-printf "$BYELLOW ====== CHROOT: INSTALLING ESSENTIAL AUR PACKAGES ====== $NOCOLOR\n"
-yay -S rtl8821ce-dkms-git pamac-aur
-printf "$BGREEN ====== DONE ====== $NOCOLOR\n"
-printf "\n"
-sleep 5s
-
 printf "$BYELLOW ====== CHROOT: SETTING UP TIME-DATE, LOCALE AND HOSTNAME ====== $NOCOLOR\n"
-ln -sf /usr/share/zoneinfo/Asia/Kolkata /etc/localtime
+ln -s /usr/share/zoneinfo/Asia/Kolkata /etc/localtime
 hwclock --systohc
-printf "$BBLUE => OPENING LOCALE GEN FILE. UNCOMMENT EN_IN AND EN_US UTF-8 LOCALES. $NOCOLOR\n"
-sleep 5s
-vim /etc/locale.gen
+sed -i "s/#en_IN UTF-8/en_IN UTF-8/;s/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/" /etc/locale.gen
 locale-gen
-printf "LANG=en_IN.UTF-8\n" | tee /etc/locale.conf > /dev/null
+printf "LANG=en_IN\n" | tee /etc/locale.conf > /dev/null
 printf "$BBLUE => /ETC/LOCALE.CONF CONTENTS: $NOCOLOR\n"
 cat /etc/locale.conf
 sleep 15s
@@ -157,14 +147,10 @@ printf "\n"
 sleep 5s
 
 printf "$BYELLOW ====== CHROOT: CREATING NEW USER AND SET PASSWORDS ====== $NOCOLOR\n"
-printf "$BBLUE => ADD PASSWORD FOR ROOT $NOCOLOR\n"
-passwd
+printf "root:$PASS_WORD\n" | chpasswd
 useradd -m -s /usr/bin/zsh -G wheel $USER_NAME
-printf "$BBLUE => ADD PASSWORD FOR NEW USER $NOCOLOR\n"
-passwd $USER_NAME
-printf "$BBLUE => OPENING VISUDO. UNCOMMENT WHEEL LINE. $NOCOLOR\n"
-sleep 5s
-EDITOR=vim visudo
+printf "$USER_NAME:$PASS_WORD\n" | chpasswd
+EDITOR="sed -i 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL'" visudo
 printf "$BGREEN ====== DONE ====== $NOCOLOR\n"
 printf "\n"
 sleep 5s
@@ -176,17 +162,36 @@ printf "$BGREEN ====== DONE ====== $NOCOLOR\n"
 printf "\n"
 sleep 5s
 
+su $USER_NAME -c "
+cd /home/$USER_NAME
+printf "$BYELLOW ====== CHROOT: INSTALLING YAY ====== $NOCOLOR\n"
+git clone https://aur.archlinux.org/yay.git
+cd yay
+makepkg -sicr
+cd ..
+rm -r yay
+printf "$BGREEN ====== DONE ====== $NOCOLOR\n"
+printf "\n"
+sleep 5s
+
+printf "$BYELLOW ====== CHROOT: INSTALLING ESSENTIAL AUR PACKAGES ====== $NOCOLOR\n"
+yay -S rtl8821ce-dkms-git pamac-aur nerd-fonts-hack nerd-fonts-fira-code nerd-fonts-jetbrains-mono nerd-fonts-source-code-pro
+printf "$BGREEN ====== DONE ====== $NOCOLOR\n"
+printf "\n"
+sleep 5s
+"
+
 printf "$BYELLOW ====== CHROOT: ENABLING REQUIRED SERVICES ====== $NOCOLOR\n"
 ufw enable
-ln -sf /usr/lib/systemd/system/sddm.service /etc/systemd/system/display-manager.service
-ln -sf /usr/lib/systemd/system/NetworkManager.service /etc/systemd/system/multi-user.target.wants/NetworkManager.service
-ln -sf /usr/lib/systemd/system/NetworkManager-dispatcher.service /etc/systemd/system/dbus-org.freedesktop.nm-dispatcher.service
-ln -sf /usr/lib/systemd/system/NetworkManager-wait-online.service /etc/systemd/system/network-online.target.wants/NetworkManager-wait-online.service
-ln -sf /usr/lib/systemd/system/ufw.service /etc/systemd/system/multi-user.target.wants/ufw.service
-ln -sf /usr/lib/systemd/system/tlp.service /etc/systemd/system/multi-user.target.wants/tlp.service
+ln -s /usr/lib/systemd/system/sddm.service /etc/systemd/system/display-manager.service
+ln -s /usr/lib/systemd/system/NetworkManager.service /etc/systemd/system/multi-user.target.wants/NetworkManager.service
+ln -s /usr/lib/systemd/system/NetworkManager-dispatcher.service /etc/systemd/system/dbus-org.freedesktop.nm-dispatcher.service
+ln -s /usr/lib/systemd/system/NetworkManager-wait-online.service /etc/systemd/system/network-online.target.wants/NetworkManager-wait-online.service
+ln -s /usr/lib/systemd/system/ufw.service /etc/systemd/system/multi-user.target.wants/ufw.service
+ln -s /usr/lib/systemd/system/tlp.service /etc/systemd/system/multi-user.target.wants/tlp.service
 if [[ "$VBOX_INSTALL" == "true" ]]
 then
-    ln -sf /usr/lib/systemd/system/vboxservice.service /etc/systemd/system/multi-user.target.wants/vboxservice.service
+    ln -s /usr/lib/systemd/system/vboxservice.service /etc/systemd/system/multi-user.target.wants/vboxservice.service
 fi
 printf "$BGREEN ====== DONE ====== $NOCOLOR\n"
 printf "\n"

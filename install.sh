@@ -150,7 +150,7 @@ printf "$BYELLOW ====== CHROOT: CREATING NEW USER AND SET PASSWORDS ====== $NOCO
 printf "root:$PASS_WORD\n" | chpasswd
 useradd -m -s /usr/bin/zsh -G wheel $USER_NAME
 printf "$USER_NAME:$PASS_WORD\n" | chpasswd
-EDITOR="sed -i 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL'" visudo
+EDITOR="sed -i 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/'" visudo
 printf "$BGREEN ====== DONE ====== $NOCOLOR\n"
 printf "\n"
 sleep 5s

@@ -31,11 +31,23 @@ printf "$BGREEN ====== DONE ====== $NOCOLOR\n"
 printf "\n"
 sleep 5s
 
-# time sync, system update, firewall enable
+# time sync, system update, firewall enable, set dpi
 printf "$BYELLOW ====== POST-INSTALL TASKS ====== $NOCOLOR\n"
 sudo timedatectl set-ntp true
 sudo pacman --noconfirm -Syu
 sudo ufw enable
+printf "Xft.dpi: 150\n" | tee ~/.Xresources > /dev/null
+printf "$BGREEN ====== DONE ====== $NOCOLOR\n"
+printf "\n"
+sleep 5s
+
+# tap to click and natural scrolling
+printf "$BYELLOW ====== ENABLING TAP-TO-CLICK AND NATURAL SCROLLING ====== $NOCOLOR\n"
+printf "\tOption \"Tapping\" \"on\"\n" | sudo tee -a /usr/share/X11/xorg.conf.d/40-libinput.conf > /dev/null
+printf "\tOption \"NaturalScrolling\" \"true\"\n" | sudo tee -a /usr/share/X11/xorg.conf.d/40-libinput.conf > /dev/null
+printf "$BBLUE => OPENING 40-LIBINPUT.CONF FILE. MOVE BOTTOM TWO LINES TO TOUCHPAD SECTION. $NOCOLOR\n"
+sleep 5s
+sudo vim /usr/share/X11/xorg.conf.d/40-libinput.conf
 printf "$BGREEN ====== DONE ====== $NOCOLOR\n"
 printf "\n"
 sleep 5s
@@ -64,15 +76,6 @@ sleep 5s
 # install aur packages
 printf "$BYELLOW ====== INSTALLING AUR PACKAGES ====== $NOCOLOR\n"
 yay -S rtl8821ce-dkms-git pamac-aur nerd-fonts-hack nerd-fonts-fira-code nerd-fonts-jetbrains-mono nerd-fonts-source-code-pro
-printf "$BGREEN ====== DONE ====== $NOCOLOR\n"
-printf "\n"
-sleep 5s
-
-# set up git
-printf "$BYELLOW ====== SETTING UP GIT ====== $NOCOLOR\n"
-git config --global user.email "smeetrs@gmail.com"
-git config --global user.name "lordmartian"
-git config --global credential.helper store
 printf "$BGREEN ====== DONE ====== $NOCOLOR\n"
 printf "\n"
 sleep 5s

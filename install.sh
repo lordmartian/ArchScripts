@@ -9,12 +9,10 @@
 # Notes:
 # - Creates EXT4 file system for root
 # - Assumes AMD cpu
-# - Creates swap partition
 #
 # Usage (as root):
 # - bash install.sh
 # - Pass -v option for vbox installation
-# - Use Ctrl+Z to suspend script. Then use 'kill -9 PID'.
 # ==========================================================
 
 NOCOLOR="\033[0m"
@@ -60,29 +58,28 @@ printf "$BYELLOW ====== DISK PARTITIONING, FORMATTING AND MOUNTING ====== $NOCOL
 fdisk -l
 printf "$BBLUE => ENTER PATH OF DISK TO BE PARTITIONED $BRED [!] $NOCOLOR\n"
 read DISK
-printf "$BBLUE => STARTING FDISK UTILITY. CREATE EFI, SWAP AND ROOT PARTITIONS. $NOCOLOR\n"
+printf "$BBLUE => STARTING FDISK UTILITY. CREATE ROOT (+EFI) PARTITION. $NOCOLOR\n"
 sleep 5s
 fdisk $DISK
 printf "$BBLUE => ENTER EFI PARTITION PATH $BRED [!] $NOCOLOR\n"
 read EFI_PARTITION
-printf "$BBLUE => ENTER SWAP PARTITION PATH $BRED [!] $NOCOLOR\n"
-read SWAP_PARTITION
 printf "$BBLUE => ENTER ROOT PARTITION PATH $BRED [!] $NOCOLOR\n"
 read ROOT_PARTITION
 mkfs.ext4 $ROOT_PARTITION
 mount $ROOT_PARTITION /mnt
-mkfs.fat -F 32 $EFI_PARTITION
+if [[ "$VBOX_INSTALL" == "true" ]]
+then
+    mkfs.fat -F 32 $EFI_PARTITION
+fi
 mkdir -p /mnt/boot/efi
 mount $EFI_PARTITION /mnt/boot/efi
-mkswap $SWAP_PARTITION
-swapon $SWAP_PARTITION
 printf "$BGREEN ====== DONE ====== $NOCOLOR\n"
 printf "\n"
 sleep 5s
 
 # install all required packages
 printf "$BYELLOW ====== INSTALLING REQUIRED PACKAGES ====== $NOCOLOR\n"
-pacstrap /mnt base linux linux-lts linux-headers linux-lts-headers linux-firmware amd-ucode sudo grub efibootmgr vim git base-devel ntfs-3g xorg plasma konsole dolphin firefox ufw tlp zsh stow neofetch ctags tmux starship noto-fonts-emoji
+pacstrap /mnt base linux linux-lts linux-headers linux-lts-headers linux-firmware amd-ucode grub efibootmgr sudo vim git base-devel ntfs-3g networkmanager xorg xf86-input-libinput lightdm lightdm-gtk-greeter i3 rofi ttf-dejavu brightnessctl nitrogen alacritty thunar firefox ufw tlp zsh stow neofetch ctags tmux starship noto-fonts-emoji
 if [[ "$VBOX_INSTALL" == "true" ]]
 then
     pacstrap /mnt virtualbox-guest-utils xf86-video-vmware
@@ -150,7 +147,7 @@ printf "\n"
 sleep 5s
 
 printf "$BYELLOW ====== CHROOT: SETTING UP GRUB BOOTLOADER ====== $NOCOLOR\n"
-grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Linux
+grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Arch
 grub-mkconfig -o /boot/grub/grub.cfg
 printf "$BGREEN ====== DONE ====== $NOCOLOR\n"
 printf "\n"
@@ -159,7 +156,7 @@ sleep 5s
 printf "$BYELLOW ====== CHROOT: ENABLING REQUIRED SERVICES ====== $NOCOLOR\n"
 mkdir -p /etc/systemd/system/multi-user.target.wants
 mkdir -p /etc/systemd/system/network-online.target.wants
-ln -sf /usr/lib/systemd/system/sddm.service /etc/systemd/system/display-manager.service
+ln -sf /usr/lib/systemd/system/lightdm.service /etc/systemd/system/display-manager.service
 ln -sf /usr/lib/systemd/system/NetworkManager.service /etc/systemd/system/multi-user.target.wants/NetworkManager.service
 ln -sf /usr/lib/systemd/system/NetworkManager-dispatcher.service /etc/systemd/system/dbus-org.freedesktop.nm-dispatcher.service
 ln -sf /usr/lib/systemd/system/NetworkManager-wait-online.service /etc/systemd/system/network-online.target.wants/NetworkManager-wait-online.service
@@ -179,3 +176,4 @@ printf "$BBLUE ====== INSTALLATION COMPLETE. SHUTTING DOWN. REMOVE INSTALLATION 
 umount -R /mnt
 sleep 5s
 shutdown now
+

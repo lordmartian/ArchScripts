@@ -2,10 +2,10 @@
 
 # ====================================================================
 # Bash script to test terminal truecolor (24-bit)
-# 
+#
 # Notes:
 # - Truecolor is enabled if script outputs a smooth color gradient
-# 
+#
 # Usage:
 # - bash test_term_truecolor.sh
 # ====================================================================
@@ -23,4 +23,3 @@ awk -v term_cols="${width:-$(tput cols || echo 80)}" 'BEGIN{
     }
     printf "\n";
 }'
-

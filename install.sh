@@ -3,9 +3,9 @@
 # ==========================================================
 # Bash script for Arch Linux installation
 #
-# Pre-requisites: 
+# Pre-requisites:
 # - Working internet connection
-# 
+#
 # Notes:
 # - Creates EXT4 file system for root
 # - Assumes AMD cpu
@@ -79,7 +79,7 @@ sleep 5s
 
 # install all required packages
 printf "$BYELLOW ====== INSTALLING REQUIRED PACKAGES ====== $NOCOLOR\n"
-pacstrap /mnt base linux linux-lts linux-headers linux-lts-headers linux-firmware amd-ucode grub efibootmgr sudo vim git base-devel ntfs-3g networkmanager xorg xf86-input-libinput lightdm lightdm-gtk-greeter i3 rofi ttf-dejavu brightnessctl nitrogen alacritty thunar firefox ufw tlp zsh stow neofetch ctags tmux starship noto-fonts-emoji
+pacstrap /mnt base linux linux-lts linux-headers linux-lts-headers linux-firmware amd-ucode grub efibootmgr sudo vim git base-devel ntfs-3g networkmanager xorg xf86-input-libinput lightdm lightdm-gtk-greeter i3 rofi ttf-dejavu brightnessctl nitrogen alacritty thunar firefox ufw tlp zsh stow neofetch ctags tmux starship noto-fonts-emoji archlinux-wallpaper
 if [[ "$VBOX_INSTALL" == "true" ]]
 then
     pacstrap /mnt virtualbox-guest-utils xf86-video-vmware
@@ -156,10 +156,13 @@ sleep 5s
 printf "$BYELLOW ====== CHROOT: ENABLING REQUIRED SERVICES ====== $NOCOLOR\n"
 mkdir -p /etc/systemd/system/multi-user.target.wants
 mkdir -p /etc/systemd/system/network-online.target.wants
+mkdir -p /etc/systemd/system/sysinit.target.wants
 ln -sf /usr/lib/systemd/system/lightdm.service /etc/systemd/system/display-manager.service
 ln -sf /usr/lib/systemd/system/NetworkManager.service /etc/systemd/system/multi-user.target.wants/NetworkManager.service
 ln -sf /usr/lib/systemd/system/NetworkManager-dispatcher.service /etc/systemd/system/dbus-org.freedesktop.nm-dispatcher.service
 ln -sf /usr/lib/systemd/system/NetworkManager-wait-online.service /etc/systemd/system/network-online.target.wants/NetworkManager-wait-online.service
+ln -sf /usr/lib/systemd/system/systemd-timesyncd.service /etc/systemd/system/dbus-org.freedesktop.timesync1.service
+ln -sf /usr/lib/systemd/system/systemd-timesyncd.service /etc/systemd/system/sysinit.target.wants/systemd-timesyncd.service
 ln -sf /usr/lib/systemd/system/ufw.service /etc/systemd/system/multi-user.target.wants/ufw.service
 ln -sf /usr/lib/systemd/system/tlp.service /etc/systemd/system/multi-user.target.wants/tlp.service
 if [[ "$VBOX_INSTALL" == "true" ]]
@@ -176,4 +179,3 @@ printf "$BBLUE ====== INSTALLATION COMPLETE. SHUTTING DOWN. REMOVE INSTALLATION 
 umount -R /mnt
 sleep 5s
 shutdown now
-

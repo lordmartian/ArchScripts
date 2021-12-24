@@ -31,12 +31,20 @@ printf "$BGREEN ====== DONE ====== $NOCOLOR\n"
 printf "\n"
 sleep 5s
 
-# time sync, system update, firewall enable, set dpi
+# system update, firewall enable
 printf "$BYELLOW ====== POST-INSTALL TASKS ====== $NOCOLOR\n"
-sudo timedatectl set-ntp true
 sudo pacman --noconfirm -Syu
 sudo ufw enable
+printf "$BGREEN ====== DONE ====== $NOCOLOR\n"
+printf "\n"
+sleep 5s
+
+# i3 tasks
+printf "$BYELLOW ====== I3 SPECIFIC TASKS ====== $NOCOLOR\n"
 printf "Xft.dpi: 150\n" | tee ~/.Xresources > /dev/null
+printf "$BBLUE => STARTING NITROGEN, SELECT WALLPAPER. $NOCOLOR\n"
+sleep 5s
+nitrogen /usr/share/backgrounds/archlinux
 printf "$BGREEN ====== DONE ====== $NOCOLOR\n"
 printf "\n"
 sleep 5s
@@ -92,7 +100,7 @@ printf "$BYELLOW ====== CLONING/DOWNLOADING STUFF FROM GITHUB ====== $NOCOLOR\n"
 git clone https://github.com/dracula/alacritty.git Downloads/Github/alacritty-dracula
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git .oh-my-zsh/custom/plugins/zsh-syntax-highlighting
 git clone https://github.com/tmux-plugins/tpm .tmux/plugins/tpm
-curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+curl -fLo .vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 printf "$BGREEN ====== DONE ====== $NOCOLOR\n"
 printf "\n"
 sleep 5s
@@ -106,7 +114,7 @@ do
     if [[ -d $DIR ]]
     then
         cd $DIR
-        find . -type f | sed -e "s/^\.\///" | xargs -i rm -f $HOME/{}
+        find . -type f | sed -e "s/^\.\///" | xargs -i rm -f ~/{}
         cd ..
         stow -t ~ -S $DIR
     fi

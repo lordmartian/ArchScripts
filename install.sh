@@ -9,6 +9,7 @@
 # Notes:
 # - Creates EXT4 file system for root
 # - Assumes AMD cpu
+# - No swap (file/partition) is created
 #
 # Usage (as root):
 # - bash install.sh

@@ -9,7 +9,7 @@
 # Notes:
 # - Creates EXT4 file system for root
 # - Assumes AMD cpu
-# - No swap (file/partition) is created
+# - Creates swap file instead of partition
 #
 # Usage (as root):
 # - bash install.sh
@@ -54,6 +54,13 @@ printf "$BGREEN ====== DONE ====== $NOCOLOR\n"
 printf "\n"
 sleep 5s
 
+# sync live usb time
+printf "$BYELLOW ====== SYNCING TIME-DATE ====== $NOCOLOR\n"
+timedatectl set-ntp true
+printf "$BGREEN ====== DONE ====== $NOCOLOR\n"
+printf "\n"
+sleep 5s
+
 # create partition, format them and mount
 printf "$BYELLOW ====== DISK PARTITIONING, FORMATTING AND MOUNTING ====== $NOCOLOR\n"
 fdisk -l
@@ -78,9 +85,21 @@ printf "$BGREEN ====== DONE ====== $NOCOLOR\n"
 printf "\n"
 sleep 5s
 
+# create swap file
+printf "$BYELLOW ====== CREATING SWAP FILE ====== $NOCOLOR\n"
+printf "$BBLUE => ENTER DESIRED SWAP SIZE IN MB $NOCOLOR\n"
+read SWAP_SIZE
+dd if=/dev/zero of=/mnt/swapfile bs=1M count=$SWAP_SIZE status=progress
+chmod 600 /mnt/swapfile
+mkswap /mnt/swapfile
+swapon /mnt/swapfile
+printf "$BGREEN ====== DONE ====== $NOCOLOR\n"
+printf "\n"
+sleep 5s
+
 # install all required packages
 printf "$BYELLOW ====== INSTALLING REQUIRED PACKAGES ====== $NOCOLOR\n"
-pacstrap /mnt base linux linux-lts linux-headers linux-lts-headers linux-firmware amd-ucode grub efibootmgr sudo vim git base-devel ntfs-3g networkmanager xorg xf86-input-libinput lightdm lightdm-gtk-greeter i3 rofi ttf-dejavu brightnessctl nitrogen alacritty thunar firefox ufw tlp zsh stow neofetch ctags tmux starship noto-fonts-emoji archlinux-wallpaper
+pacstrap /mnt base linux linux-lts linux-headers linux-lts-headers linux-firmware amd-ucode grub efibootmgr os-prober sudo vim git base-devel ntfs-3g networkmanager xorg xf86-input-libinput lightdm lightdm-gtk-greeter i3 rofi ttf-dejavu brightnessctl nitrogen alacritty thunar firefox ufw tlp zsh stow neofetch ctags tmux starship noto-fonts-emoji archlinux-wallpaper
 if [[ "$VBOX_INSTALL" == "true" ]]
 then
     pacstrap /mnt virtualbox-guest-utils xf86-video-vmware
@@ -149,6 +168,7 @@ sleep 5s
 
 printf "$BYELLOW ====== CHROOT: SETTING UP GRUB BOOTLOADER ====== $NOCOLOR\n"
 grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Arch
+sed -i "s/#GRUB_DISABLE_OS_PROBER=false/GRUB_DISABLE_OS_PROBER=false/" /etc/default/grub
 grub-mkconfig -o /boot/grub/grub.cfg
 printf "$BGREEN ====== DONE ====== $NOCOLOR\n"
 printf "\n"

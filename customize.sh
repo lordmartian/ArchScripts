@@ -39,6 +39,16 @@ printf "$BGREEN ====== DONE ====== $NOCOLOR\n"
 printf "\n"
 sleep 5s
 
+# create dirs
+printf "$BYELLOW ====== CREATING EMPTY REQUIRED DIRS ====== $NOCOLOR\n"
+mkdir -p ~/Downloads/Wallpapers
+mkdir -p ~/Downloads/GitHub
+sudo mkdir -p /mnt/Windows
+sudo mkdir -p /mnt/Data
+printf "$BGREEN ====== DONE ====== $NOCOLOR\n"
+printf "\n"
+sleep 5s
+
 # i3 tasks
 printf "$BYELLOW ====== I3 SPECIFIC TASKS ====== $NOCOLOR\n"
 printf "Xft.dpi: 150\n" | tee ~/.Xresources > /dev/null
@@ -56,16 +66,6 @@ printf "\tOption \"NaturalScrolling\" \"true\"\n" | sudo tee -a /usr/share/X11/x
 printf "$BBLUE => OPENING 40-LIBINPUT.CONF FILE. MOVE BOTTOM TWO LINES TO TOUCHPAD SECTION. $NOCOLOR\n"
 sleep 5s
 sudo vim /usr/share/X11/xorg.conf.d/40-libinput.conf
-printf "$BGREEN ====== DONE ====== $NOCOLOR\n"
-printf "\n"
-sleep 5s
-
-# create dirs
-printf "$BYELLOW ====== CREATING EMPTY REQUIRED DIRS ====== $NOCOLOR\n"
-mkdir -p ~/Downloads/Wallpapers
-mkdir -p ~/Downloads/Github
-sudo mkdir -p /mnt/Windows
-sudo mkdir -p /mnt/Data
 printf "$BGREEN ====== DONE ====== $NOCOLOR\n"
 printf "\n"
 sleep 5s
@@ -97,9 +97,9 @@ sleep 5s
 
 # github repos
 printf "$BYELLOW ====== CLONING/DOWNLOADING STUFF FROM GITHUB ====== $NOCOLOR\n"
-git clone https://github.com/dracula/alacritty.git Downloads/Github/alacritty-dracula
+git clone https://github.com/dracula/alacritty.git Downloads/GitHub/alacritty-dracula
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git .oh-my-zsh/custom/plugins/zsh-syntax-highlighting
-git clone https://github.com/tmux-plugins/tpm .tmux/plugins/tpm
+git clone https://github.com/tmux-plugins/tpm.git .tmux/plugins/tpm
 curl -fLo .vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 printf "$BGREEN ====== DONE ====== $NOCOLOR\n"
 printf "\n"

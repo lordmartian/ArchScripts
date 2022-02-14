@@ -110,7 +110,7 @@ git clone https://github.com/lordmartian/dotfiles.git
 cd dotfiles
 for DIR in *
 do
-    if [[ -d $DIR ]]
+    if [ -d $DIR ]
     then
         cd $DIR
         find . -type f | sed -e "s/^\.\///" | xargs -i rm -f ~/{}
@@ -118,7 +118,7 @@ do
         stow -t ~ -S $DIR
     fi
 done
-cd ~
+cd ..
 printf "$BGREEN ====== DONE ====== $NOCOLOR\n"
 printf "\n"
 sleep 5s
@@ -126,3 +126,4 @@ sleep 5s
 printf "$BBLUE ====== CUSTOMIZATION COMPLETE. REBOOTING. ====== $NOCOLOR\n"
 sleep 5s
 sudo reboot now
+

@@ -25,18 +25,18 @@ BPURPLE="\033[1;35m"
 BCYAN="\033[1;36m"
 
 # parse arguments
-VBOX_INSTALL=false
+VBOX_INSTALL="false"
 while getopts ":v" OPT
 do
     case $OPT in
-        v) VBOX_INSTALL=true;;
+        v) VBOX_INSTALL="true";;
         \?) printf "Invalid Option: -$OPTARG \n";;
     esac
 done
 printf "\n"
 
 # notify vbox or machine installation
-if [[ "$VBOX_INSTALL" == "true" ]]
+if [ $VBOX_INSTALL = "true" ]
 then
     printf "$BBLUE => VBOX INSTALLATION $NOCOLOR\n"
 else
@@ -75,7 +75,7 @@ printf "$BBLUE => ENTER ROOT PARTITION PATH $BRED [!] $NOCOLOR\n"
 read ROOT_PARTITION
 mkfs.ext4 $ROOT_PARTITION
 mount $ROOT_PARTITION /mnt
-if [[ "$VBOX_INSTALL" == "true" ]]
+if [ $VBOX_INSTALL = "true" ]
 then
     mkfs.fat -F 32 $EFI_PARTITION
 fi
@@ -100,7 +100,7 @@ sleep 5s
 # install all required packages
 printf "$BYELLOW ====== INSTALLING REQUIRED PACKAGES ====== $NOCOLOR\n"
 pacstrap /mnt base linux linux-lts linux-headers linux-lts-headers linux-firmware amd-ucode grub efibootmgr os-prober sudo vim git base-devel ntfs-3g networkmanager xorg xf86-input-libinput lightdm lightdm-gtk-greeter i3 rofi ttf-dejavu brightnessctl nitrogen alacritty thunar firefox ufw tlp zsh stow neofetch ctags tmux starship noto-fonts-emoji archlinux-wallpaper
-if [[ "$VBOX_INSTALL" == "true" ]]
+if [ $VBOX_INSTALL = "true" ]
 then
     pacstrap /mnt virtualbox-guest-utils xf86-video-vmware
 else
@@ -186,7 +186,7 @@ ln -sf /usr/lib/systemd/system/systemd-timesyncd.service /etc/systemd/system/dbu
 ln -sf /usr/lib/systemd/system/systemd-timesyncd.service /etc/systemd/system/sysinit.target.wants/systemd-timesyncd.service
 ln -sf /usr/lib/systemd/system/ufw.service /etc/systemd/system/multi-user.target.wants/ufw.service
 ln -sf /usr/lib/systemd/system/tlp.service /etc/systemd/system/multi-user.target.wants/tlp.service
-if [[ "$VBOX_INSTALL" == "true" ]]
+if [ $VBOX_INSTALL = "true" ]
 then
     ln -sf /usr/lib/systemd/system/vboxservice.service /etc/systemd/system/multi-user.target.wants/vboxservice.service
 fi
@@ -200,3 +200,4 @@ printf "$BBLUE ====== INSTALLATION COMPLETE. SHUTTING DOWN. REMOVE INSTALLATION 
 umount -R /mnt
 sleep 5s
 shutdown now
+

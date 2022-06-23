@@ -66,7 +66,12 @@ printf "$BYELLOW ====== DISK PARTITIONING, FORMATTING AND MOUNTING ====== $NOCOL
 fdisk -l
 printf "$BBLUE => ENTER PATH OF DISK TO BE PARTITIONED $BRED [!] $NOCOLOR\n"
 read DISK
-printf "$BBLUE => STARTING FDISK UTILITY. CREATE ROOT (+EFI) PARTITION. $NOCOLOR\n"
+if [ "$VBOX_INSTALL" = "true" ]
+then
+    printf "$BBLUE => STARTING FDISK UTILITY. CREATE EFI AND ROOT PARTITIONS. $NOCOLOR\n"
+else
+    printf "$BBLUE => STARTING FDISK UTILITY. CREATE ROOT PARTITION. $NOCOLOR\n"
+fi
 sleep 5s
 fdisk $DISK
 printf "$BBLUE => ENTER EFI PARTITION PATH $BRED [!] $NOCOLOR\n"
@@ -133,18 +138,18 @@ printf "\n"
 sleep 5s
 
 # chroot commands:
-# 1.timedate/locale/hostname, 2.root/user password, 3.grub, 4.enable services
+# 1.timedate/locale/hostname, 2.root/user password, 3.grub, 4.enable services, 5. environment
 arch-chroot /mnt /bin/bash << EOC
 printf "$BYELLOW ====== CHROOT: SETTING UP TIME-DATE, LOCALE AND HOSTNAME ====== $NOCOLOR\n"
 ln -sf /usr/share/zoneinfo/Asia/Kolkata /etc/localtime
 hwclock --systohc
 sed -i "s/#en_IN UTF-8/en_IN UTF-8/;s/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/" /etc/locale.gen
 locale-gen
-printf "LANG=en_IN\n" | tee /etc/locale.conf > /dev/null
+printf "LANG=en_IN\n" | tee -a /etc/locale.conf > /dev/null
 printf "$BBLUE => /ETC/LOCALE.CONF CONTENTS: $NOCOLOR\n"
 cat /etc/locale.conf
 sleep 15s
-printf "$HOST_NAME\n" | tee /etc/hostname > /dev/null
+printf "$HOST_NAME\n" | tee -a /etc/hostname > /dev/null
 printf "$BBLUE => /ETC/HOSTNAME CONTENTS: $NOCOLOR\n"
 cat /etc/hostname
 sleep 15s
@@ -161,7 +166,7 @@ printf "$BYELLOW ====== CHROOT: CREATING NEW USER AND SET PASSWORDS ====== $NOCO
 printf "root:$PASS_WORD\n" | chpasswd
 useradd -m -s /usr/bin/zsh -G wheel $USER_NAME
 printf "$USER_NAME:$PASS_WORD\n" | chpasswd
-EDITOR="sed -i 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/'" visudo
+EDITOR="sed -i 's/# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/'" visudo
 printf "$BGREEN ====== DONE ====== $NOCOLOR\n"
 printf "\n"
 sleep 5s
@@ -190,6 +195,18 @@ if [ "$VBOX_INSTALL" = "true" ]
 then
     ln -sf /usr/lib/systemd/system/vboxservice.service /etc/systemd/system/multi-user.target.wants/vboxservice.service
 fi
+printf "$BGREEN ====== DONE ====== $NOCOLOR\n"
+printf "\n"
+sleep 5s
+
+printf "$BYELLOW ====== CHROOT: SETTING ENVIRONMENT VARIABLES ====== $NOCOLOR\n"
+if [ "$VBOX_INSTALL" = "true" ]
+then
+    printf "LIBGL_ALWAYS_SOFTWARE=true\n" | tee -a /etc/environment > /dev/null
+fi
+printf "$BBLUE => /ETC/ENVIRONMENT CONTENTS: $NOCOLOR\n"
+cat /etc/environment
+sleep 15s
 printf "$BGREEN ====== DONE ====== $NOCOLOR\n"
 printf "\n"
 sleep 5s

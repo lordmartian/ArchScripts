@@ -9,7 +9,7 @@
 # Notes:
 # -  Settings specific to me
 #
-# Usage (as user, from non-lts kernel):
+# Usage (as user):
 # - bash customize.sh
 # ====================================================================
 
@@ -41,9 +41,8 @@ sleep 5s
 
 # create dirs
 printf "$BYELLOW ====== CREATING EMPTY REQUIRED DIRS ====== $NOCOLOR\n"
-mkdir -p ~/Downloads/Wallpapers
-mkdir -p ~/Downloads/GitHub
-sudo mkdir -p /mnt/Windows
+mkdir -p ~/GitHub
+sudo mkdir -p /mnt/System
 sudo mkdir -p /mnt/Data
 printf "$BGREEN ====== DONE ====== $NOCOLOR\n"
 printf "\n"
@@ -51,7 +50,7 @@ sleep 5s
 
 # i3 tasks
 printf "$BYELLOW ====== I3 SPECIFIC TASKS ====== $NOCOLOR\n"
-printf "Xft.dpi: 150\n" | tee ~/.Xresources > /dev/null
+printf "Xft.dpi: 135\n" | tee ~/.Xresources > /dev/null
 printf "$BBLUE => STARTING NITROGEN, SELECT WALLPAPER. $NOCOLOR\n"
 sleep 5s
 nitrogen /usr/share/backgrounds/archlinux

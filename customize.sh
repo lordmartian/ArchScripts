@@ -50,7 +50,7 @@ sleep 5s
 
 # i3 tasks
 printf "$BYELLOW ====== I3 SPECIFIC TASKS ====== $NOCOLOR\n"
-printf "Xft.dpi: 135\n" | tee ~/.Xresources > /dev/null
+printf "Xft.dpi: 150\n" | tee ~/.Xresources > /dev/null
 printf "$BBLUE => STARTING NITROGEN, SELECT WALLPAPER. $NOCOLOR\n"
 sleep 5s
 nitrogen /usr/share/backgrounds/archlinux
@@ -118,4 +118,3 @@ sleep 5s
 printf "$BBLUE ====== CUSTOMIZATION COMPLETE. REBOOTING. ====== $NOCOLOR\n"
 sleep 5s
 sudo reboot now
-

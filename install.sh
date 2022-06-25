@@ -104,7 +104,7 @@ sleep 5s
 
 # install all required packages
 printf "$BYELLOW ====== INSTALLING REQUIRED PACKAGES ====== $NOCOLOR\n"
-pacstrap /mnt base linux linux-lts linux-headers linux-lts-headers linux-firmware amd-ucode grub efibootmgr os-prober sudo vim git base-devel ntfs-3g networkmanager xorg xf86-input-libinput lightdm lightdm-gtk-greeter i3 rofi ttf-dejavu brightnessctl nitrogen kitty thunar firefox ufw tlp zsh stow neofetch ctags tmux starship noto-fonts-emoji archlinux-wallpaper
+pacstrap /mnt base linux linux-lts linux-headers linux-lts-headers linux-firmware amd-ucode grub efibootmgr os-prober sudo vim git base-devel ntfs-3g networkmanager xorg xf86-input-libinput lightdm lightdm-gtk-greeter i3 rofi ttf-dejavu brightnessctl nitrogen kitty thunar firefox ufw tlp zsh stow neofetch tmux starship noto-fonts-emoji archlinux-wallpaper
 if [ "$VBOX_INSTALL" = "true" ]
 then
     pacstrap /mnt virtualbox-guest-utils xf86-video-vmware
@@ -217,4 +217,3 @@ printf "$BBLUE ====== INSTALLATION COMPLETE. SHUTTING DOWN. REMOVE INSTALLATION 
 umount -R /mnt
 sleep 5s
 shutdown now
-

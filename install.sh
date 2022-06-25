@@ -44,7 +44,7 @@ else
 fi
 printf "\n"
 
-# change to home directory
+# change to root home directory
 cd ~
 
 # check internet connectivity
@@ -210,6 +210,8 @@ sleep 15s
 printf "$BGREEN ====== DONE ====== $NOCOLOR\n"
 printf "\n"
 sleep 5s
+
+rm -rf /root/*
 EOC
 
 # shut down

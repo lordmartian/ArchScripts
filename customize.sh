@@ -89,9 +89,9 @@ sleep 5s
 
 # github repos
 printf "$BYELLOW ====== CLONING/DOWNLOADING STUFF FROM GITHUB ====== $NOCOLOR\n"
-git clone https://github.com/jandamm/zgenom.git .zgenom
-git clone https://github.com/tmux-plugins/tpm.git .tmux/plugins/tpm
-curl -fLo .vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+git clone https://github.com/jandamm/zgenom.git ~/.zgenom
+git clone https://github.com/tmux-plugins/tpm.git ~/.tmux/plugins/tpm
+curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 printf "$BGREEN ====== DONE ====== $NOCOLOR\n"
 printf "\n"
 sleep 5s

@@ -82,7 +82,8 @@ sleep 5s
 
 # install aur packages
 printf "$BYELLOW ====== INSTALLING AUR PACKAGES ====== $NOCOLOR\n"
-yay -S rtl8821ce-dkms-git nerd-fonts-hack
+yay -S rtl8821ce-dkms-git nerd-fonts-hack nerd-fonts-space-mono
+printf "blacklist rtw88_8821ce\n" | sudo tee /etc/modprobe.d/blacklist.conf > /dev/null
 printf "$BGREEN ====== DONE ====== $NOCOLOR\n"
 printf "\n"
 sleep 5s

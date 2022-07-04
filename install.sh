@@ -104,7 +104,9 @@ sleep 5s
 
 # install all required packages
 printf "$BYELLOW ====== INSTALLING REQUIRED PACKAGES ====== $NOCOLOR\n"
-pacstrap /mnt base linux linux-lts linux-headers linux-lts-headers linux-firmware amd-ucode grub efibootmgr os-prober sudo vim git base-devel ntfs-3g networkmanager xorg xf86-input-libinput lightdm lightdm-gtk-greeter i3 rofi ttf-dejavu brightnessctl nitrogen kitty thunar firefox ufw tlp zsh stow neofetch tmux starship noto-fonts-emoji archlinux-wallpaper
+pacstrap /mnt base linux linux-lts linux-headers linux-lts-headers linux-firmware amd-ucode efibootmgr os-prober grub sudo networkmanager
+pacstrap /mnt git base-devel ntfs-3g ufw tlp tmux zsh starship vim stow neofetch
+pacstrap /mnt xorg xf86-input-libinput brightnessctl lightdm lightdm-gtk-greeter i3 picom rofi polybar nitrogen archlinux-wallpaper ttf-dejavu noto-fonts-emoji kitty
 if [ "$VBOX_INSTALL" = "true" ]
 then
     pacstrap /mnt virtualbox-guest-utils xf86-video-vmware
@@ -146,18 +148,9 @@ hwclock --systohc
 sed -i "s/#en_IN UTF-8/en_IN UTF-8/;s/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/" /etc/locale.gen
 locale-gen
 printf "LANG=en_IN\n" | tee -a /etc/locale.conf > /dev/null
-printf "$BBLUE => /ETC/LOCALE.CONF CONTENTS: $NOCOLOR\n"
-cat /etc/locale.conf
-sleep 15s
 printf "$HOST_NAME\n" | tee -a /etc/hostname > /dev/null
-printf "$BBLUE => /ETC/HOSTNAME CONTENTS: $NOCOLOR\n"
-cat /etc/hostname
-sleep 15s
 printf "127.0.0.1\tlocalhost\n" | tee -a /etc/hosts > /dev/null
 printf "::1\tlocalhost\n" | tee -a /etc/hosts > /dev/null
-printf "$BBLUE => /ETC/HOSTS CONTENTS: $NOCOLOR\n"
-cat /etc/hosts
-sleep 15s
 printf "$BGREEN ====== DONE ====== $NOCOLOR\n"
 printf "\n"
 sleep 5s
@@ -204,9 +197,6 @@ if [ "$VBOX_INSTALL" = "true" ]
 then
     printf "LIBGL_ALWAYS_SOFTWARE=true\n" | tee -a /etc/environment > /dev/null
 fi
-printf "$BBLUE => /ETC/ENVIRONMENT CONTENTS: $NOCOLOR\n"
-cat /etc/environment
-sleep 15s
 printf "$BGREEN ====== DONE ====== $NOCOLOR\n"
 printf "\n"
 sleep 5s
